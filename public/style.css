@@ -1,0 +1,25 @@
+.layout {
+    border: 1px solid red;
+    padding: 8px;
+    margin: 8px;
+}
+
+.view {
+    border: 1px solid blue;
+    padding: 8px;
+    margin: 8px;
+}
+
+.partial {
+    border: 1px solid green;
+    padding: 8px;
+    margin: 8px;
+}
+
+img {
+    width: 40vw;
+}
+
+canvas {
+    border: 1px purple solid;
+}
