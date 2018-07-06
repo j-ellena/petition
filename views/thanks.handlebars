@@ -1,6 +1,9 @@
 <div class="view thanks">
 
-    <h3>Thanks for supporting the cause!</h3>
-    <a href="/list">See all {{numSigners}} signers</a>
+    {{> logout }}
     
+    <h3>Thanks for supporting the cause!</h3>
+    <img src={{ signature }}>
+    <p><a href="/list">See all {{numSigners}} signers</a></p>
+
 </div>

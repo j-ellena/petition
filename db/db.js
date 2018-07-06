@@ -22,8 +22,15 @@ exports.returnSigners = () => {
 
 exports.getNumber = () => {
     const q = `SELECT COUNT(*) FROM signatures;`;
-    const params = [];
-    return db.query(q, params).then(results => {
+    return db.query(q).then(results => {
         return results.rows[0].count;
+    });
+};
+
+exports.getSignature = signerId => {
+    const q = `SELECT signature FROM signatures WHERE id = $1;`;
+    const params = [signerId];
+    return db.query(q, params).then(results => {
+        return results.rows[0].signature;
     });
 };

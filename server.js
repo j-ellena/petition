@@ -6,7 +6,8 @@ const app = express();
 const hb = require("express-handlebars");
 const db = require("./db/db");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
+const csurf = require("csurf");
 
 // *****************************************************************************
 
@@ -23,40 +24,60 @@ app.use("/favicon.ico", (req, res) => {
 
 // *****************************************************************************
 
-app.use(cookieParser());
+app.use(
+    cookieSession({
+        secret: `I'm always angry.`,
+        maxAge: 1000 * 60 * 60 * 24 * 14
+    })
+);
+
+app.use(csurf());
 app.use((req, res, next) => {
-    if (req.cookies.signed && req.url === "/") {
-        res.redirect("/thanks");
-    } else {
-        next();
-    }
+    res.locals.csrfToken = req.csrfToken();
+    next();
 });
 
 // *****************************************************************************
 
+function checkForSig(req, res, next) {
+    !req.session.signerId ? res.redirect("/") : next();
+}
+
+// *****************************************************************************
+
 app.get("/", (req, res) => {
-    res.render("home");
+    req.session.signerId ? res.redirect("/thanks") : res.render("home");
 });
 
 app.post("/", (req, res) => {
     db.insertSigner(req.body.firstname, req.body.lastname, req.body.signature)
-        .then(() => {
-            res.cookie("signed", "true");
+        .then(newSigner => {
+            req.session.signerId = newSigner.id;
             res.redirect("/thanks");
         })
-        .catch(err => {
+        .catch(falseErr => {
             res.render("home", {
                 falseFlag: true,
-                err: err
+                falseErr: falseErr
             });
         });
 });
 
-app.get("/thanks", (req, res) => {
-    db.getNumber().then(numSigners => {
-        res.render("thanks", {
-            numSigners: numSigners
-        });
+app.get("/thanks", checkForSig, (req, res) => {
+    db.getSignature(req.session.signerId).then(signature => {
+        db.getNumber()
+            .then(numSigners => {
+                res.render("thanks", {
+                    numSigners: numSigners,
+                    signature: signature
+                });
+            })
+            .catch(err => {
+                res.render("home", {
+                    errFlag: true,
+                    err: err
+                });
+            });
     });
 });
 
@@ -67,6 +88,11 @@ app.get("/list", (req, res) => {
             numSigners: listSigners.length
         });
     });
+});
+
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.render("logout");
 });
 
 app.get("*", (req, res) => {

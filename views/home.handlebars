@@ -1,8 +1,14 @@
 <div class="view home">
 
-    {{#if falseFlag }}
+    {{> logout }}
+
+    {{#if errFlag }}
         <h4>Error message: {{ err }}</h4>
+    {{/if}}
+
+    {{#if falseFlag }}
         {{> false }}
+        <h4>Error message: {{ falseErr }}</h4>
     {{/if}}
 
     {{> form }}
