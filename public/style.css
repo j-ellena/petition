@@ -1,25 +1,64 @@
+* {
+    margin: 0;
+    outline: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
+    color: white;
+}
+
+body {
+    /* background-image: url("../assets/bike_racks.jpeg"); */
+    background-color: #222222;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+canvas {
+    background-color: #222222;
+    border: 1px white solid;
+    border-radius: 20px;
+}
+
+input,
+button {
+    background-color: #222222;
+    border: 1px white solid;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin: 5px;
+}
+
+button,
+a {
+    cursor: pointer;
+}
+
 .layout {
-    border: 1px solid red;
+    border: 3px white solid;
+    border-radius: 20px;
+    background: #000000cc;
     padding: 8px;
-    margin: 8px;
+    margin-left: 20vw;
+    margin-right: 20vw;
+    margin-top: 10vw;
+    align-content: center;
 }
 
 .view {
-    border: 1px solid blue;
+    border: 2px white dashed;
+    border-radius: 20px;
     padding: 8px;
     margin: 8px;
 }
 
 .partial {
-    border: 1px solid green;
+    border: 1px white dotted;
+    border-radius: 20px;
     padding: 8px;
     margin: 8px;
 }
 
 img {
-    width: 40vw;
-}
-
-canvas {
-    border: 1px purple solid;
+    width: 30vw;
 }

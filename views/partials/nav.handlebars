@@ -1,0 +1,34 @@
+<div class="partial nav">
+
+
+    <div>
+        <a href="/">Home</a>
+    </div>
+
+
+    {{#if petitionFlag}}
+        <div>
+            <a href="/list">Signers</a>
+        </div>
+    {{else}}
+        <div>
+            <a href="/petition">Petition</a>
+        </div>
+    {{/if}}
+
+
+    {{#if loginFlag}}
+        <div>
+            <a href="/logout">Logout</a>
+        </div>
+    {{else}}
+        <div>
+            <a href="/register">Register</a>
+        </div>
+        <div>
+            <a href="/login">Login</a>
+        </div>
+    {{/if}}
+
+
+</div>
