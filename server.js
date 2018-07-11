@@ -299,4 +299,8 @@ app.post("/petition", (req, res) => {
 // *****************************************************************************
 // *****************************************************************************
 
-app.listen(8080, () => ca.rainbow("...listening on 8080"));
+app.listen(
+    process.env.PORT || 8080,
+    () => console.log("...listening... j'ellena-petition"),
+    process.env.PORT
+);
