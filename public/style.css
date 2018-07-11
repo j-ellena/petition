@@ -29,6 +29,10 @@ button {
     margin: 5px;
 }
 
+input::-webkit-input-placeholder {
+    color: white;
+}
+
 button,
 a {
     cursor: pointer;

@@ -1,0 +1,28 @@
+<div class="view city">
+
+
+    <h7>*** LIST ***</h7>
+    </br>
+
+    <ol>So far these people from {{ city }} signed petition:
+        {{#listSigners}}
+
+            <li>
+
+                {{#if homepage}}
+                    <a href="{{ homepage }}">{{ first_name }} {{ last_name }}</a>
+                {{else}}
+                    {{ first_name }} {{ last_name }}
+                {{/if}}
+
+                {{#if age}}
+                    ({{ age }})
+                {{/if}}
+
+            </li>
+
+        {{/listSigners}}
+    </ol>
+
+
+</div>

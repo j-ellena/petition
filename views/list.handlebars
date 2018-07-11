@@ -6,9 +6,34 @@
 
     <ol>So far {{numSigners}} people signed petition:
         {{#listSigners}}
+
             <li>
-                {{first_name}} {{last_name}}
+
+                {{#if homepage}}
+                    <a href="{{ homepage }}">{{ first_name }} {{ last_name }}</a>
+                {{else}}
+                    {{ first_name }} {{ last_name }}
+                {{/if}}
+
+                {{#if age}}
+                    ({{ age }}
+
+                    {{#if city}}
+                        , <a href="/list/{{ city }}">{{ city }}</a>)
+                    {{else}}
+                        )
+                    {{/if}}
+
+                {{else}}
+
+                    {{#if city}}
+                        (<a href="/list/{{ city }}">{{ city }}</a>)
+                    {{/if}}
+
+                {{/if}}
+
             </li>
+
         {{/listSigners}}
     </ol>
 

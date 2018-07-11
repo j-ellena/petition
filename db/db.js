@@ -17,13 +17,6 @@ exports.insertSigner = (userId, signature) => {
     });
 };
 
-exports.getSigners = () => {
-    const q = `SELECT * FROM signatures;`;
-    return db.query(q).then(results => {
-        return results.rows;
-    });
-};
-
 exports.getNumber = () => {
     const q = `SELECT COUNT(*) FROM signatures;`;
     return db.query(q).then(results => {
@@ -69,6 +62,17 @@ exports.getPassword = email => {
     });
 };
 
+exports.getEmail = email => {
+    const params = [email];
+    const q = `
+            SELECT * FROM users WHERE email = $1;
+            `;
+    return db.query(q, params).then(results => {
+        if (results.rows[0] !== undefined)
+            throw new Error("This email is already registered!");
+    });
+};
+
 exports.getUser = email => {
     const params = [email];
     const q = `
@@ -76,5 +80,51 @@ exports.getUser = email => {
             `;
     return db.query(q, params).then(results => {
         return results.rows[0];
+    });
+};
+
+// *****************************************************************************
+// user_profiles table queries
+// *****************************************************************************
+
+exports.insertProfile = (userId, age, city, homepage) => {
+    const params = [userId, age || null, city || null, homepage || null];
+    const q = `
+             INSERT INTO user_profiles
+                (user_id, age, city, homepage)
+                VALUES ($1, $2, $3, $4)
+             RETURNING *;
+              `;
+    return db.query(q, params).then(results => {
+        return results.rows[0];
+    });
+};
+
+// *****************************************************************************
+// joined table queries
+// *****************************************************************************
+
+exports.getSigners = () => {
+    const q = `
+        SELECT users.first_name, users.last_name, user_profiles.age, user_profiles.city, user_profiles.homepage
+            FROM users
+            JOIN user_profiles
+            ON user_profiles.user_id = users.id
+            `;
+    return db.query(q).then(results => {
+        return results.rows;
+    });
+};
+
+exports.getCity = city => {
+    const params = [city];
+    const q = `
+        SELECT users.first_name, users.last_name, user_profiles.age, user_profiles.homepage
+            FROM users
+            JOIN user_profiles ON user_profiles.user_id = users.id
+            WHERE user_profiles.city = $1;
+            `;
+    return db.query(q, params).then(results => {
+        return results.rows;
     });
 };
