@@ -1,21 +1,20 @@
 <div class="view petition">
 
 
-    <h7>*** PETITION ***</h7>
-    </br>
+    <h7>*** PETITION ***</h7></br>
 
-    <input type="text" name="firstname" value="{{ firstName }}" disabled>
-    <input type="text" name="lastname" value="{{ lastName }}" disabled>
+    <input type="text" name="firstname" value="{{ firstName }}" disabled></br>
+    <input type="text" name="lastname" value="{{ lastName }}" disabled></br>
 
     <form method="post">
 
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"></br>
 
-        <input id="hidden-input" type="hidden" name="signature" width="500" height="150" value="">
-        <canvas id="canvas"></canvas>
+        <input id="hidden-input" type="hidden" name="signature" width="500" height="150" value=""></br>
+        <canvas id="canvas"></canvas></br>
 
-        <button id="button-clear" type="button">Clear signature</button>
-        <button type="submit">Sign the petition!</button>
+        <button id="button-clear" type="button">Clear signature</button></br>
+        <button type="submit">Sign the petition!</button></br>
 
     </form>
 

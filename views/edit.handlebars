@@ -1,0 +1,30 @@
+<div class="view edit">
+
+
+    <h7>*** EDIT ***</h7></br>
+
+    <p>Update your profile:</p>
+
+    <form method="post">
+
+
+        <input name="_csrf" type="hidden" value="{{ csrfToken }}"></br>
+
+        {{#userProfile}}
+
+            <input type="text" name="firstname" placeholder="First name" value="{{ first_name }}"></br>
+            <input type="text" name="lastname" placeholder="Last name" value="{{ last_name }}"></br>
+            <input type="email" name="email" placeholder="Email" value="{{ email }}"></br>
+            <input type="password" name="password" placeholder="If you want, type new password"></br>
+            <input type="number" name="age" placeholder="Age" min="18" max="111" value="{{ age }}"></br>
+            <input type="text" name="city" placeholder="City" value="{{ city }}"></br>
+            <input type="url" name="homepage" placeholder="Homepage" value="{{ homepage }}"></br>
+
+            <button type="submit">Update</button></br>
+
+        {{/userProfile}}
+
+    </form>
+
+
+</div>

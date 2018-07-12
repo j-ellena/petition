@@ -1,6 +1,5 @@
 console.log("\x1Bc");
 
-const ca = require("chalk-animation");
 const express = require("express");
 const app = express();
 const hb = require("express-handlebars");
@@ -49,14 +48,20 @@ app.use((req, res, next) => {
 // *****************************************************************************
 
 function checkForLog(req, res, next) {
-    req.session.user ? next() : res.redirect("/login");
+    if (!req.session.user) {
+        res.redirect("/login");
+    } else {
+        next();
+    }
 }
 
 function checkForSig(req, res, next) {
-    !req.session.user
-        ? // unlogged user
-        res.redirect("/login")
-        : // logged user
+    if (!req.session.user) {
+        // unlogged user
+        res.redirect("/login");
+    }
+    // logged user
+    else {
         db.getSignature(req.session.user.id).then(result => {
             // signed petiton
             if (result) {
@@ -74,6 +79,7 @@ function checkForSig(req, res, next) {
                 }
             }
         });
+    }
 }
 
 function capitalize(string) {
@@ -98,13 +104,6 @@ app.get("/register", (req, res) => {
     });
 });
 
-app.get("/profile", checkForLog, (req, res) => {
-    res.render("profile", {
-        petitionFlag: false,
-        loginFlag: true
-    });
-});
-
 app.get("/login", (req, res) => {
     res.render("login", {
         petitionFlag: false,
@@ -121,23 +120,20 @@ app.get("/petition", checkForSig, (req, res) => {
     });
 });
 
-app.get("/thanks", checkForSig, (req, res) => {
-    db.getSignature(req.session.user.id).then(result => {
-        db.getNumber()
-            .then(numSigners => {
-                res.render("thanks", {
-                    numSigners: numSigners,
-                    signature: result.signature,
-                    petitionFlag: true,
-                    loginFlag: true
-                });
-            })
-            .catch(err => {
-                res.render("home", {
-                    errFlag: true,
-                    err: err
-                });
-            });
+app.get("/profile", checkForLog, (req, res) => {
+    res.render("profile", {
+        petitionFlag: false,
+        loginFlag: true
+    });
+});
+
+app.get("/profile/edit", checkForLog, (req, res) => {
+    db.getProfile(req.session.user.id).then(userProfile => {
+        res.render("edit", {
+            userProfile: userProfile,
+            petitionFlag: false,
+            loginFlag: true
+        });
     });
 });
 
@@ -170,6 +166,26 @@ app.get("/list/:city", checkForSig, (req, res) => {
                 err: err
             });
         });
+});
+
+app.get("/thanks", checkForSig, (req, res) => {
+    db.getSignature(req.session.user.id).then(result => {
+        db.getNumber()
+            .then(numSigners => {
+                res.render("thanks", {
+                    numSigners: numSigners,
+                    signature: result.signature,
+                    petitionFlag: true,
+                    loginFlag: true
+                });
+            })
+            .catch(err => {
+                res.render("home", {
+                    errFlag: true,
+                    err: err
+                });
+            });
+    });
 });
 
 app.get("/logout", (req, res) => {
@@ -229,27 +245,6 @@ app.post("/register", (req, res) => {
         });
 });
 
-app.post("/profile", (req, res) => {
-    db.insertProfile(
-        req.session.user.id,
-        req.body.age,
-        req.body.city.toLowerCase(),
-        req.body.homepage
-    )
-
-        .then(newProfile => {
-            req.session.profile = newProfile;
-            res.redirect("/petition");
-        })
-
-        .catch(err => {
-            res.render("home", {
-                errFlag: true,
-                err: err
-            });
-        });
-});
-
 app.post("/login", (req, res) => {
     db.getPassword(req.body.email)
         .then(hashedPassword => {
@@ -296,11 +291,90 @@ app.post("/petition", (req, res) => {
         });
 });
 
+app.post("/profile", (req, res) => {
+    db.insertProfile(
+        req.session.user.id,
+        req.body.age,
+        capitalize(req.body.city),
+        req.body.homepage
+    )
+
+        .then(() => {
+            res.redirect("/petition");
+        })
+
+        .catch(err => {
+            res.render("home", {
+                errFlag: true,
+                err: err
+            });
+        });
+});
+
+app.post("/profile/edit", (req, res) => {
+    function editProfile() {
+        db.updateUser(
+            req.session.user.id,
+            req.body.firstname,
+            req.body.lastname,
+            req.body.email
+        ).then(() => {
+            db.upsertProfile(
+                req.session.user.id,
+                req.body.age,
+                capitalize(req.body.city),
+                req.body.homepage
+            )
+                .then(() => {
+                    if (req.body.password !== "") {
+                        bc.hashPassword(req.body.password)
+                            //
+                            .then(hashedPassword => {
+                                db.changePassword(
+                                    req.session.user.id,
+                                    hashedPassword
+                                )
+                                    //
+                                    .then(() => {
+                                        res.redirect("/profile/edit");
+                                    });
+                            });
+                    } else {
+                        res.redirect("/profile/edit");
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.render("edit", {
+                        errFlag: true,
+                        err: "Something went wrong :("
+                    });
+                });
+        });
+    }
+
+    editProfile();
+});
+
+app.post("/thanks", (req, res) => {
+    db.deleteSig(req.session.user.id)
+        //
+        .then(() => {
+            res.redirect("/petition");
+        })
+        //
+        .catch(err => {
+            console.log(err);
+            res.render("edit", {
+                errFlag: true,
+                err: "Something went wrong :("
+            });
+        });
+});
+
 // *****************************************************************************
 // *****************************************************************************
 
-app.listen(
-    process.env.PORT || 8080,
-    () => console.log("...listening... j'ellena-petition"),
-    process.env.PORT
+app.listen(process.env.PORT || 8080, () =>
+    console.log("...listening... j'ellena-petition", process.env.PORT)
 );

@@ -4,9 +4,17 @@
     <h7>*** THANKS ***</h7>
     </br>
 
-    <h3>Thanks for supporting the cause!</h3>
+    <h3>Thanks for supporting my cause!</h3>
     <img src={{ signature }}>
     <p><a href="/list">See all {{numSigners}} signers</a></p>
 
+    <form method="post">
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"></br>
+
+        <p>Changed your mind?</p>
+        <button type="submit">Unsign the petition</button>
+
+    </form>
 
 </div>
