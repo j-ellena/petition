@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS signatures;
 
 CREATE TABLE signatures (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) UNIQUE,
+    user_id INT UNIQUE REFERENCES users(id),
     signature TEXT NOT NULL CHECK(signature!=''),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS user_profiles;
 
 CREATE TABLE user_profiles (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) UNIQUE,
+    user_id INT UNIQUE REFERENCES users(id),
     age INT,
     city VARCHAR(50),
     homepage VARCHAR(100),

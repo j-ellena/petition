@@ -1,37 +1,37 @@
-<div class="partial nav">
-
-
-    <div>
-        <a href="/">Home</a>
-    </div>
+<ul class="nav">
 
 
     {{#if petitionFlag}}
-        <div>
-            <a href="/list">Signers</a>
-        </div>
+        <li class="link">
+            <a href="/list"><img class="svg" src="../assets/icon_users.svg" alt="users">Signers</a>
+        </li>
     {{else}}
-        <div>
-            <a href="/petition">Petition</a>
-        </div>
+        <li class="link">
+            <a href="/petition"><img class="svg" src="../assets/icon_signature.svg" alt="signature">Petition</a>
+        </li>
     {{/if}}
 
 
-    {{#if loginFlag}}
-        <div>
-            <a href="/profile/edit">Profile</a>
-        </div>
-        <div>
-            <a href="/logout">Logout</a>
-        </div>
+    <li class="link center">
+        <a href="/"><img class="svg" src="../assets/icon_home.svg" alt="home">Home</a>
+    </li>
+
+
+    {{#if logged}}
+        <li class="link">
+            <a href="/profile/edit"><img class="svg" src="../assets/icon_user.svg" alt="user">Profile</a>
+        </li>
+        <li class="link">
+            <a href="/logout"><img class="svg" src="../assets/icon_logout.svg" alt="logout">Logout</a>
+        </li>
     {{else}}
-        <div>
-            <a href="/register">Register</a>
-        </div>
-        <div>
-            <a href="/login">Login</a>
-        </div>
+        <li class="link">
+            <a href="/register"><img class="svg" src="../assets/icon_user_plus.svg" alt="register">Register</a>
+        </li>
+        <li class="link">
+            <a href="/login"><img class="svg" src="../assets/icon_login.svg" alt="login">Login</a>
+        </li>
     {{/if}}
 
 
-</div>
+</ul>

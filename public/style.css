@@ -3,26 +3,116 @@
     outline: 0;
     box-sizing: border-box;
     font-family: "Open Sans", sans-serif;
+    font-size: medium;
     color: white;
 }
 
 body {
-    /* background-image: url("../assets/bike_racks.jpeg"); */
-    background-color: #222222;
+    background-image: url("../assets/bike_racks.jpeg");
+    background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    width: 100vw;
+    min-height: 100vh;
 }
+
+.layout {
+    background: #000000cc;
+    margin-left: 20vw;
+    margin-right: 20vw;
+}
+
+.view {
+    padding: 2vw;
+    margin: 2vw;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.home {
+    padding: 5vw 11vw;
+    text-align: justify;
+}
+
+.home img {
+    height: 30px;
+    width: auto;
+    vertical-align: bottom;
+}
+
+#spiced {
+    height: 15px;
+    width: auto;
+    vertical-align: baseline;
+}
+
+.edit p {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 150px 300px;
+    grid-template-areas: "label input";
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.edit input {
+    grid-area: input;
+}
+
+.label {
+    grid-area: label;
+    margin-right: auto;
+    text-align: right;
+}
+
+.edit input[type="password"] {
+    min-width: 250px;
+}
+
+/* ************************************************************************* */
+
+.highlight {
+    color: red;
+}
+
+img {
+    width: 25vw;
+}
+
+h1 {
+    font-size: x-large;
+}
+
+h1::first-letter {
+    color: #ff0000;
+    font-size: xxx-large;
+}
+
+form p {
+    color: lightgray;
+    font-size: medium;
+    min-width: 10vw;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ************************************************************************* */
 
 canvas {
     background-color: #222222;
-    border: 1px white solid;
+    border: 1px solid red;
     border-radius: 20px;
 }
 
-input,
-button {
-    background-color: #222222;
+input {
+    background-color: transparent;
     border: 1px white solid;
     border-radius: 20px;
     padding: 5px 15px;
@@ -30,48 +120,98 @@ button {
 }
 
 input::-webkit-input-placeholder {
-    color: white;
+    color: gray;
 }
 
-button,
+button {
+    background-color: transparent;
+    border: 1px solid red;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: large;
+}
+
+button:hover {
+    background-color: red;
+}
+
 a {
     cursor: pointer;
+    text-decoration-color: red;
 }
 
-.layout {
-    border: 3px white solid;
-    border-radius: 20px;
-    background: #000000cc;
-    padding: 8px;
-    margin-left: 20vw;
-    margin-right: 20vw;
-    margin-top: 10vw;
-    align-content: center;
+/* ************************************************************************* */
+
+.nav {
+    height: 50px;
+    overflow: hidden;
+    align-items: center;
+    padding: 0px 10px;
+    border-bottom: 1px red solid;
+    display: flex;
 }
 
-.view {
-    border: 2px white dashed;
-    border-radius: 20px;
-    padding: 8px;
-    margin: 8px;
+ul {
+    padding: 10px;
+    list-style: none;
 }
 
-.partial {
-    border: 1px white dotted;
-    border-radius: 20px;
-    padding: 8px;
-    margin: 8px;
+.nav li.center {
+    margin-left: auto;
+    margin-right: auto;
 }
 
-img {
-    width: 30vw;
+.nav > li:not(:first-child):not(.center) {
+    margin-left: 10px;
 }
 
-.thanks button {
-    border: 0;
-    background-color: transparent;
+.nav > li:not(:last-child):not(.center) {
+    margin-right: 10px;
+}
+
+.svg {
+    margin-right: 5px;
+    height: 25px;
+    width: auto;
+    vertical-align: bottom;
+}
+
+.current,
+.link:hover {
+    filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg)
+        saturate(600%) contrast(0.8);
+}
+
+/* ************************************************************************* */
+
+ol {
+    list-style: none;
+    counter-reset: item;
+}
+
+ol > li {
+    counter-increment: item;
+    margin-bottom: 5px;
+}
+
+ol > li:before {
+    margin-right: 10px;
+    content: counter(item);
+    color: red;
+    width: 1.2em;
+    text-align: center;
+    display: inline-block;
+}
+
+ol > li a {
     text-decoration: underline;
-    cursor: pointer;
-    font-size: 16px;
-    padding-left: 0;
+    text-decoration-color: white;
+}
+
+ol > li a:hover {
+    color: red;
+    text-decoration-color: red;
 }

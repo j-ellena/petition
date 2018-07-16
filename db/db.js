@@ -40,7 +40,7 @@ exports.getSignature = userId => {
     });
 };
 
-exports.deleteSig = userId => {
+exports.deleteSignature = userId => {
     const params = [userId];
     const q = `
             DELETE FROM signatures
@@ -63,28 +63,6 @@ exports.insertUser = (firstName, lastName, email, hashedPassword) => {
               `;
     return db.query(q, params).then(results => {
         return results.rows[0];
-    });
-};
-
-exports.getPassword = email => {
-    const params = [email];
-    const q = `
-            SELECT hashed_password FROM users WHERE email = $1;
-            `;
-    return db.query(q, params).then(results => {
-        if (results.rows[0] === undefined) throw new Error("Email not found!");
-        return results.rows[0].hashed_password;
-    });
-};
-
-exports.getEmail = email => {
-    const params = [email];
-    const q = `
-            SELECT * FROM users WHERE email = $1;
-            `;
-    return db.query(q, params).then(results => {
-        if (results.rows[0] !== undefined)
-            throw new Error("This email is already registered!");
     });
 };
 
@@ -115,6 +93,17 @@ exports.updateUser = (userId, firstName, lastName, email) => {
     });
 };
 
+exports.getPassword = email => {
+    const params = [email];
+    const q = `
+            SELECT hashed_password FROM users WHERE email = $1;
+            `;
+    return db.query(q, params).then(results => {
+        if (results.rows[0] === undefined) throw new Error("Email not found!");
+        return results.rows[0].hashed_password;
+    });
+};
+
 exports.changePassword = (userId, hashedPassword) => {
     const params = [userId, hashedPassword];
     const q = `
@@ -126,6 +115,17 @@ exports.changePassword = (userId, hashedPassword) => {
 
     return db.query(q, params).then(results => {
         return results.rows[0];
+    });
+};
+
+exports.getEmail = email => {
+    const params = [email];
+    const q = `
+            SELECT * FROM users WHERE email = $1;
+            `;
+    return db.query(q, params).then(results => {
+        if (results.rows[0] !== undefined)
+            throw new Error("This email is already registered!");
     });
 };
 
@@ -177,6 +177,7 @@ exports.getSigners = () => {
             ON signatures.user_id = users.id
             LEFT JOIN user_profiles
             ON user_profiles.user_id = users.id
+            ORDER BY signatures.created_at
             `;
     return db.query(q).then(results => {
         return results.rows;

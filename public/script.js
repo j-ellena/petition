@@ -1,64 +1,89 @@
-console.log("sanity-check");
+console.log("client script");
 
-const canvas = $("#canvas");
-const ctx = canvas[0].getContext("2d");
-const buttonClear = $("#button-clear");
-const hiddenInput = $("#hidden-input");
+// *****************************************************************************
 
-ctx.strokeStyle = "purple";
-ctx.lineJoin = "round";
-ctx.lineWidth = 2;
+function highlightNav() {
+    const url = location.href.toLowerCase();
+    const links = $(".nav li a");
+    let matchedFlag = false;
 
-let click = {
-    x: [],
-    y: [],
-    dragging: []
-};
-let drawing = false;
+    links.each(function() {
+        const linkUrl = this.href.toLowerCase();
 
-canvas.on("mousedown", function(e) {
-    drawing = true;
-    const offset = $(this).offset();
-    click.x.push(e.pageX - offset.left);
-    click.y.push(e.pageY - offset.top);
-    click.dragging.push(false);
-    redraw();
-});
+        if (url === linkUrl) {
+            matchedFlag = true;
 
-canvas.on("mousemove", function(e) {
-    if (drawing) {
-        const offset = $(this).offset();
-        click.x.push(e.pageX - offset.left);
-        click.y.push(e.pageY - offset.top);
-        click.dragging.push(true);
-        redraw();
-    }
-});
-
-canvas.on("mouseup", function() {
-    hiddenInput.val(canvas[0].toDataURL());
-    drawing = false;
-});
-
-function redraw() {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    for (let i = 0; i < click.x.length; i++) {
-        ctx.beginPath();
-        if (click.dragging[i] && i) {
-            ctx.moveTo(click.x[i - 1], click.y[i - 1]);
-        } else {
-            ctx.moveTo(click.x[i], click.y[i]);
+            $("li.current").removeClass("current");
+            $(this)
+                .parent()
+                .addClass("current");
         }
-        ctx.lineTo(click.x[i], click.y[i]);
-        ctx.closePath();
-        ctx.stroke();
+    });
+
+    if (matchedFlag === false) {
+        $("li.current").removeClass("current");
     }
 }
 
+highlightNav();
+
+// *****************************************************************************
+
+const canvas = $("#canvas");
+const ctx = canvas[0].getContext("2d");
+const hiddenInput = $("#hidden-input");
+const buttonClear = $("#button-clear");
+
+const pointSize = 2;
+ctx.fillStyle = "red";
+ctx.strokeStyle = "red";
+ctx.lineWidth = 3;
+ctx.lineJoin = "round";
+
+let x, y;
+
+// *****************************************************************************
+
+canvas.on("mousedown", e => {
+    drawPoint(e);
+
+    canvas.on("mousemove", e => {
+        drawLine(e);
+    });
+});
+
+canvas.on("mouseup", () => {
+    canvas.off("mousemove");
+    hiddenInput.val(canvas[0].toDataURL());
+});
+
 buttonClear.on("click", () => {
     ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
-    click.x = [];
-    click.y = [];
-    click.dragging = [];
 });
+
+// *****************************************************************************
+
+function getXY(e) {
+    const rect = canvas[0].getBoundingClientRect();
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+}
+
+function drawPoint(e) {
+    ctx.beginPath();
+    getXY(e);
+    ctx.arc(x, y, pointSize, 0, Math.PI * 2, true);
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawLine(e) {
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    getXY(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.closePath();
+}
+
+// *****************************************************************************

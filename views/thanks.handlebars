@@ -1,20 +1,26 @@
 <div class="view thanks">
 
 
-    <h7>*** THANKS ***</h7>
-    </br>
+    <h3>
+        <span class="highlight">{{firstName}}</span>
+        <span> thank you for supporting 🚴‍♀️!</span>
+    </h3>
 
-    <h3>Thanks for supporting my cause!</h3>
+
     <img src={{ signature }}>
-    <p><a href="/list">See all {{numSigners}} signers</a></p>
+
+
+    <a href="/list"><button>See all {{numSigners}} signers</button></a>
+
 
     <form method="post">
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"></br>
 
-        <p>Changed your mind?</p>
+        <span>Changed your mind?</span>
         <button type="submit">Unsign the petition</button>
 
     </form>
+
 
 </div>

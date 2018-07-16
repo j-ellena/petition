@@ -37,6 +37,11 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    res.locals.logged = req.session.user || false;
+    next();
+});
+
 // *****************************************************************************
 // global variables
 // *****************************************************************************
@@ -62,23 +67,25 @@ function checkForSig(req, res, next) {
     }
     // logged user
     else {
-        db.getSignature(req.session.user.id).then(result => {
-            // signed petiton
-            if (result) {
-                if (req.url === "/petition") {
-                    res.redirect("/thanks");
+        db.getSignature(req.session.user.id)
+            //
+            .then(result => {
+                // signed petition
+                if (result) {
+                    if (req.url === "/petition") {
+                        res.redirect("/thanks");
+                    } else {
+                        next();
+                    }
+                    // unsigned petiton
                 } else {
-                    next();
+                    if (req.url !== "/petition") {
+                        res.redirect("/petition");
+                    } else {
+                        next();
+                    }
                 }
-                // unsigned petiton
-            } else {
-                if (req.url !== "/petition") {
-                    res.redirect("/petition");
-                } else {
-                    next();
-                }
-            }
-        });
+            });
     }
 }
 
@@ -92,22 +99,19 @@ function capitalize(string) {
 
 app.get("/", (req, res) => {
     res.render("home", {
-        petitionFlag: false,
-        loginFlag: false
+        petitionFlag: false
     });
 });
 
 app.get("/register", (req, res) => {
     res.render("register", {
-        petitionFlag: false,
-        loginFlag: false
+        petitionFlag: false
     });
 });
 
 app.get("/login", (req, res) => {
     res.render("login", {
-        petitionFlag: false,
-        loginFlag: false
+        petitionFlag: false
     });
 });
 
@@ -115,15 +119,14 @@ app.get("/petition", checkForSig, (req, res) => {
     res.render("petition", {
         firstName: req.session.user.first_name,
         lastName: req.session.user.last_name,
-        petitionFlag: false,
-        loginFlag: true
+        petitionFlag: false
     });
 });
 
 app.get("/profile", checkForLog, (req, res) => {
     res.render("profile", {
-        petitionFlag: false,
-        loginFlag: true
+        firstName: req.session.user.first_name,
+        petitionFlag: false
     });
 });
 
@@ -131,8 +134,7 @@ app.get("/profile/edit", checkForLog, (req, res) => {
     db.getProfile(req.session.user.id).then(userProfile => {
         res.render("edit", {
             userProfile: userProfile,
-            petitionFlag: false,
-            loginFlag: true
+            petitionFlag: false
         });
     });
 });
@@ -143,8 +145,7 @@ app.get("/list", checkForSig, (req, res) => {
             res.render("list", {
                 listSigners: listSigners,
                 numSigners: numSigners,
-                petitionFlag: true,
-                loginFlag: true
+                petitionFlag: true
             });
         });
     });
@@ -156,8 +157,7 @@ app.get("/list/:city", checkForSig, (req, res) => {
             res.render("city", {
                 listSigners: result,
                 city: capitalize(req.params.city),
-                petitionFlag: true,
-                loginFlag: true
+                petitionFlag: true
             });
         })
         .catch(err => {
@@ -173,10 +173,10 @@ app.get("/thanks", checkForSig, (req, res) => {
         db.getNumber()
             .then(numSigners => {
                 res.render("thanks", {
+                    firstName: req.session.user.first_name,
                     numSigners: numSigners,
                     signature: result.signature,
-                    petitionFlag: true,
-                    loginFlag: true
+                    petitionFlag: true
                 });
             })
             .catch(err => {
@@ -190,9 +190,10 @@ app.get("/thanks", checkForSig, (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session = null;
-    res.render("logout", {
-        loginFlag: false,
-        petitionFlag: false
+    res.locals.logged = false;
+    res.render("home", {
+        petitionFlag: false,
+        loggedout: true
     });
 });
 
@@ -206,27 +207,22 @@ app.get("*", (req, res) => {
 // *****************************************************************************
 
 app.post("/register", (req, res) => {
-    //
     db.getEmail(req.body.email)
-        //
         .then(() => {
             //
             bc.hashPassword(req.body.password)
                 //
                 .then(hashedPassword => {
-                    //
                     db.insertUser(
                         req.body.firstname,
                         req.body.lastname,
                         req.body.email,
                         hashedPassword
                     )
-                        //
                         .then(registeredUser => {
                             req.session.user = registeredUser;
                             res.redirect("/profile");
                         })
-                        //
                         .catch(falseErr => {
                             console.log(falseErr.detail);
                             res.render("register", {
@@ -236,7 +232,6 @@ app.post("/register", (req, res) => {
                         });
                 });
         })
-        //
         .catch(err => {
             res.render("register", {
                 falseFlag: true,
@@ -278,11 +273,9 @@ app.post("/login", (req, res) => {
 
 app.post("/petition", (req, res) => {
     db.insertSigner(req.session.user.id, req.body.signature)
-
         .then(() => {
             res.redirect("/thanks");
         })
-
         .catch(falseErr => {
             res.render("petition", {
                 falseFlag: true,
@@ -298,11 +291,9 @@ app.post("/profile", (req, res) => {
         capitalize(req.body.city),
         req.body.homepage
     )
-
         .then(() => {
             res.redirect("/petition");
         })
-
         .catch(err => {
             res.render("home", {
                 errFlag: true,
@@ -327,20 +318,24 @@ app.post("/profile/edit", (req, res) => {
             )
                 .then(() => {
                     if (req.body.password !== "") {
-                        bc.hashPassword(req.body.password)
-                            //
-                            .then(hashedPassword => {
+                        bc.hashPassword(req.body.password).then(
+                            hashedPassword => {
                                 db.changePassword(
                                     req.session.user.id,
                                     hashedPassword
-                                )
-                                    //
-                                    .then(() => {
-                                        res.redirect("/profile/edit");
+                                ).then(() => {
+                                    res.render("home", {
+                                        petitionFlag: false,
+                                        updated: true
                                     });
-                            });
+                                });
+                            }
+                        );
                     } else {
-                        res.redirect("/profile/edit");
+                        res.render("home", {
+                            petitionFlag: false,
+                            updated: true
+                        });
                     }
                 })
                 .catch(err => {
@@ -352,20 +347,17 @@ app.post("/profile/edit", (req, res) => {
                 });
         });
     }
-
     editProfile();
 });
 
 app.post("/thanks", (req, res) => {
-    db.deleteSig(req.session.user.id)
-        //
+    db.deleteSignature(req.session.user.id)
         .then(() => {
             res.redirect("/petition");
         })
-        //
         .catch(err => {
             console.log(err);
-            res.render("edit", {
+            res.render("thanks", {
                 errFlag: true,
                 err: "Something went wrong :("
             });

@@ -1,9 +1,16 @@
 <div class="view city">
 
 
-    <h7>*** LIST ***</h7></br>
+    <h2>
+        <span>So far these people from </span>
+        <span class="highlight">{{city}}</span>
+        <span> signed the petition:</span>
+    </h2>
+    </br>
+    </br>
 
-    <ol>So far these people from {{ city }} signed petition:
+
+    <ol>
         {{#listSigners}}
 
             <li>
