@@ -152,7 +152,7 @@ app.get("/list", checkForSig, (req, res) => {
 });
 
 app.get("/list/:city", checkForSig, (req, res) => {
-    db.getCity(req.params.city.toLowerCase())
+    db.getCity(capitalize(req.params.city))
         .then(result => {
             res.render("city", {
                 listSigners: result,
