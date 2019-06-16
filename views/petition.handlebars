@@ -1,0 +1,26 @@
+<div class="view petition">
+
+
+    <input class="disabled" type="text" name="firstname" value="{{ firstName }} {{ lastName }}" disabled></br>
+
+
+    <h3>
+        <span class="highlight">{{firstName}}</span>
+        <span> please sign into the field:</span>
+    </h3>
+
+
+    <form method="post">
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"></br>
+
+        <input id="hidden-input" type="hidden" name="signature" width="500" height="150" value=""></br>
+        <canvas id="canvas"></canvas></br>
+
+        <button type="submit">Sign the petition!</button>
+        <button id="button-clear" type="button">Clear signature</button></br>
+
+    </form>
+
+
+</div>

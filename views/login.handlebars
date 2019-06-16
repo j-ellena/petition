@@ -1,0 +1,28 @@
+<div class="view login">
+
+
+    <h1>Log in please:</h1>
+    </br>
+
+
+    <form method="post">
+
+        <input name="_csrf" type="hidden" value="{{ csrfToken }}"></br>
+
+        <input type="email" name="email" placeholder="Email"></br>
+        <input type="password" name="password" placeholder="Password"></br>
+
+        </br>
+        <button type="submit">Log in</button></br>
+
+    </form>
+
+
+    </br>
+    <p>
+        If you don't have an account, please
+        <a class="highlight" href="/register">register</a>
+    </p>
+
+
+</div>

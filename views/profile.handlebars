@@ -1,0 +1,24 @@
+<div class="view profile">
+
+
+    <h3>
+        <span class="highlight">{{firstName}}</span>
+        <span> please share a little bit about youself if you want:</span>
+    </h3>
+    </br>
+
+    <form method="post">
+
+        <input name="_csrf" type="hidden" value="{{ csrfToken }}"></br>
+
+        <input type="number" name="age" placeholder="Age" min="18" max="111"></br>
+        <input type="text" name="city" placeholder="City"></br>
+        <input type="url" name="homepage" placeholder="Homepage"></br>
+
+        </br>
+        <button type="submit">Continue</button></br>
+
+    </form>
+
+
+</div>

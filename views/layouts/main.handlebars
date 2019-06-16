@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Petition</title>
+
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+
+        <div class="layout">
+
+            {{> nav }}
+
+            {{#if errFlag }}
+                {{> error }}
+            {{/if}}
+
+            {{#if falseFlag }}
+                {{> error }}
+            {{/if}}
+
+            {{{ body }}}
+
+        </div>
+
+    </body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/script.js" charset='utf-8'></script>

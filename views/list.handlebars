@@ -1,0 +1,46 @@
+<div class="view list">
+
+
+    <h2>
+        <span>So far these </span>
+        <span class="highlight">{{numSigners}}</span>
+        <span> people signed the petition:</span>
+    </h2>
+    </br>
+
+
+    <ol>
+        {{#listSigners}}
+
+            <li>
+
+                {{#if homepage}}
+                    <a href="{{ homepage }}">{{ first_name }} {{ last_name }}</a>
+                {{else}}
+                    {{ first_name }} {{ last_name }}
+                {{/if}}
+
+                {{#if age}}
+                    ({{ age }}
+
+                    {{#if city}}
+                        , <a href="/list/{{ city }}">{{ city }}</a>)
+                    {{else}}
+                        )
+                    {{/if}}
+
+                {{else}}
+
+                    {{#if city}}
+                        (<a href="/list/{{ city }}">{{ city }}</a>)
+                    {{/if}}
+
+                {{/if}}
+
+            </li>
+
+        {{/listSigners}}
+    </ol>
+
+
+</div>

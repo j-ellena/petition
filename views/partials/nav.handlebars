@@ -1,0 +1,37 @@
+<ul class="nav">
+
+
+    {{#if petitionFlag}}
+        <li class="link">
+            <a href="/list"><img class="svg" src="../assets/icon_users.svg" alt="users">Signers</a>
+        </li>
+    {{else}}
+        <li class="link">
+            <a href="/petition"><img class="svg" src="../assets/icon_signature.svg" alt="signature">Petition</a>
+        </li>
+    {{/if}}
+
+
+    <li class="link center">
+        <a href="/"><img class="svg" src="../assets/icon_home.svg" alt="home">Home</a>
+    </li>
+
+
+    {{#if logged}}
+        <li class="link">
+            <a href="/profile/edit"><img class="svg" src="../assets/icon_user.svg" alt="user">Profile</a>
+        </li>
+        <li class="link">
+            <a href="/logout"><img class="svg" src="../assets/icon_logout.svg" alt="logout">Logout</a>
+        </li>
+    {{else}}
+        <li class="link">
+            <a href="/register"><img class="svg" src="../assets/icon_user_plus.svg" alt="register">Register</a>
+        </li>
+        <li class="link">
+            <a href="/login"><img class="svg" src="../assets/icon_login.svg" alt="login">Login</a>
+        </li>
+    {{/if}}
+
+
+</ul>

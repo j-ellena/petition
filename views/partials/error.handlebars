@@ -1,0 +1,12 @@
+<div class="partial error">
+
+    {{#if errFlag }}
+        <h4>Error message: {{ err }}</h4>
+    {{/if}}
+
+    {{#if falseFlag }}
+        <h4>{{ falseErr }}</h4>
+        {{> false }}
+    {{/if}}
+
+</div>

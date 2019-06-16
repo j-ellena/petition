@@ -1,0 +1,31 @@
+<div class="view register">
+
+
+    <h1>Register please:</h1>
+    </br>
+
+
+    <form method="post">
+
+        <input name="_csrf" type="hidden" value="{{ csrfToken }}"></br>
+
+        <input type="text" name="firstname" placeholder="First name"></br>
+        <input type="text" name="lastname" placeholder="Last name"></br>
+
+        <input type="email" name="email" placeholder="Email"></br>
+        <input type="password" name="password" placeholder="Password"></br>
+
+        </br>
+        <button type="submit">Register</button></br>
+
+    </form>
+
+
+    </br>
+    <p>
+        If you have already registered, please
+        <a class="highlight" href="/login">log in</a>
+    </p>
+
+
+</div>
