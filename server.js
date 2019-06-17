@@ -365,8 +365,10 @@ app.post("/thanks", (req, res) => {
 });
 
 // *****************************************************************************
+// listening
 // *****************************************************************************
 
-app.listen(process.env.PORT || 8080, () =>
-    console.log("...listening... j'ellena-petition", process.env.PORT)
+const port = process.env.PORT || 8080;
+app.listen(port, () =>
+    console.log("...listening... j'ellena-petition", port)
 );
