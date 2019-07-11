@@ -11,7 +11,7 @@ Full-Stack Project
 
 ### Features:
 - user management (registering account, hashing password, profile editing)
-- deleting signature
+- unsigning petition
 - filtering the list of signers
 - electronic signature using *canvas* HTML tag:
 
